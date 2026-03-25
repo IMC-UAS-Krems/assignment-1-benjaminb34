@@ -7,3 +7,6 @@ and provides query methods for analytics.
 Classes to implement:
   - StreamingPlatform
 """
+
+class StreamingPlatform():
+    pass

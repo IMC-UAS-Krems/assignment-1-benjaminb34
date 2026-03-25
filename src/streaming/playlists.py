@@ -14,3 +14,20 @@ class Playlist:
         self.name = name
         self.owner = owner
         self.tracks = []
+
+    def add_track(self, track):
+        if not(track in self.tracks):
+            self.tracks.append(track)
+
+    def remove_track(self, track_id):
+        for index, track in enumerate(self.tracks):
+            if track.track_id == track_id:
+                self.tracks.pop(index)
+
+    def total_duration_seconds(self):
+        return sum([x.duration_seconds for x in self.tracks])
+
+class CollaborativePlaylist(Playlist):
+    def __init__(self, playlist_id, name, owner):
+        Playlist.__init__(self, playlist_id, name, owner)
+        self.contributors = []

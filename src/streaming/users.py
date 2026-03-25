@@ -18,4 +18,14 @@ class User:
         self.age = age
         self.sessions = []
 
-        
+class FreeUser(User):
+    pass
+
+class PremiumUser(User):
+    pass
+
+class FamilyAccountUser(User):
+    pass
+
+class FamilyMember(User):
+    pass
