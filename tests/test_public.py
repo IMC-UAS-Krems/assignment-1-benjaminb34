@@ -55,7 +55,7 @@ class TestTotalListeningTime:
     # TODO: Add a test that verifies the correct value for a known time period.
     #       Calculate the expected total based on the fixture data in conftest.py.
     def test_known_period_value(self, platform: StreamingPlatform) -> None:
-        pass
+        assert (platform.total_listening_time_minutes(datetime(2025, 1, 1), datetime(2026, 12, 31)) == (185+205)/60)
 
 
 # ===========================================================================
@@ -86,7 +86,7 @@ class TestAvgUniqueTracksPremium:
     #       average for premium users. You'll need to count unique tracks
     #       per premium user and calculate the average.
     def test_correct_value(self, platform: StreamingPlatform) -> None:
-        pass
+        assert platform.avg_unique_tracks_per_premium_user(days=1300) == 2.0
 
 
 # ===========================================================================
@@ -110,7 +110,7 @@ class TestTrackMostDistinctListeners:
     # TODO: Add a test that verifies the correct track is returned.
     #       Count listeners per track from the fixture data.
     def test_correct_track(self, platform: StreamingPlatform) -> None:
-        pass
+        assert platform.track_with_most_distinct_listeners() == "t1"
 
 
 # ===========================================================================
