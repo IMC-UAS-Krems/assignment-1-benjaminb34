@@ -20,6 +20,9 @@ Run with:
 import pytest
 from datetime import datetime, timedelta
 
+from streaming.sessions import ListeningSession
+from streaming.artists import Artist
+from streaming.tracks import Song
 from streaming.platform import StreamingPlatform
 from streaming.users import FreeUser, PremiumUser, FamilyAccountUser, FamilyMember
 from streaming.playlists import CollaborativePlaylist
@@ -142,7 +145,7 @@ class TestAvgSessionDurationByType:
 
     # TODO: Add tests to verify all user types are present and have correct averages.
     def test_all_user_types_present(self, platform: StreamingPlatform) -> None:
-        pass
+        assert set(platform.avg_session_duration_by_user_type()) == set([("FreeUser", 230.0), ("PremiumUser", 385.0), ("FamilyAccountUser", 585.0), ("FamilyMember", 685.0)])
 
 
 # ===========================================================================
@@ -171,10 +174,21 @@ class TestUnderageSubUserListening:
 
     # TODO: Add tests for correct values with default and custom thresholds.
     def test_correct_value_default_threshold(self, platform: StreamingPlatform) -> None:
-        pass
+        assert platform.total_listening_time_underage_sub_users_minutes() == 975.0
 
-    def test_custom_threshold(self, platform: StreamingPlatform) -> None:
-        pass
+    def test_custom_threshold(self) -> None:
+        p = StreamingPlatform("Test")
+        u2 = FamilyAccountUser("u2", "Jordan", 40)
+        a = Artist("a1", "Pioneers", "Pop")
+        p.add_user(u2)
+        u1 = FamilyMember("u1", "Jack", 15, u2)
+        p.add_user(u1)
+        t1 = Song("t1", "Moon", 165, "Pop", a)
+        p.add_track(t1)
+        s1 = ListeningSession('s1', u1, t1, None, 165)
+        p.record_session(s1)
+        u1.add_session(s1)
+        assert p.total_listening_time_underage_sub_users_minutes() == 165.0
 
 
 # ===========================================================================
@@ -250,7 +264,7 @@ class TestUserTopGenre:
 
     # TODO: Add a test that verifies the correct genre and percentage for a known user.
     def test_correct_top_genre(self, platform: StreamingPlatform) -> None:
-        pass
+        assert platform.user_top_genre("u3") == ("electronic", 100)
 
 
 # ===========================================================================
@@ -285,7 +299,15 @@ class TestCollaborativePlaylistsManyArtists:
     # TODO: Add tests that verify the correct playlists are returned with
     #       different threshold values.
     def test_default_threshold(self, platform: StreamingPlatform) -> None:
-        pass
+        c1 = CollaborativePlaylist("c1", "Good", platform._users["u1"])
+        c1.add_track(platform._catalouge["t1"])
+        c1.add_track(platform._catalouge["t6"])
+        c2 = CollaborativePlaylist("c2", "Good", platform._users["u1"])
+        c2.add_track(platform._catalouge["t1"])
+        platform.add_playlist(c1)
+        platform.add_playlist(c2)
+        assert platform.collaborative_playlists_with_many_artists(1) == [c1]
+        assert set(platform.collaborative_playlists_with_many_artists(0)) == set([c1,c2])
 
 
 # ===========================================================================
@@ -306,6 +328,13 @@ class TestAvgTracksPerPlaylistType:
         self, platform: StreamingPlatform
     ) -> None:
         """Verify the method returns a dict with both playlist types."""
+        c1 = CollaborativePlaylist("c1", "Good", platform._users["u1"])
+        c1.add_track(platform._catalouge["t1"])
+        c1.add_track(platform._catalouge["t6"])
+        c2 = CollaborativePlaylist("c2", "Good", platform._users["u1"])
+        c2.add_track(platform._catalouge["t1"])
+        platform.add_playlist(c1)
+        platform.add_playlist(c2)
         result = platform.avg_tracks_per_playlist_type()
         assert isinstance(result, dict)
         assert "Playlist" in result

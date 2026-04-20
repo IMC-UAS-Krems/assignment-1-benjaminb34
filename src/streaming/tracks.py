@@ -13,8 +13,9 @@ Classes to implement:
       - NarrativeEpisode
     - AudiobookTrack
 """
+from abc import ABC
 
-class Track:
+class Track(ABC):
     def __init__(self, track_id, title, duration_seconds, genre):
         self.track_id = track_id
         self.title = title

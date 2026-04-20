@@ -148,7 +148,7 @@ def platform() -> StreamingPlatform:
     rob = FreeUser("u3", "Rob",   age=27)
     john = FamilyAccountUser("u4", "John", age=45)
     ashley = FamilyMember("u5", "Ashley", age=20, parent=john)
-    david = FamilyMember("u6", "David", age=18, parent=john)
+    david = FamilyMember("u6", "David", age=17, parent=john)
     john.add_sub_user(ashley)
     john.add_sub_user(david)
 

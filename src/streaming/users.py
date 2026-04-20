@@ -34,16 +34,19 @@ class FreeUser(User):
     def __init__(self, user_id, name, age):
         User.__init__(self, user_id, name, age)
         MAX_SKIPS_PER_HOURS = 6
+        self.name = "FreeUser"
 
 class PremiumUser(User):
     def __init__(self, user_id, name, age, subscription_start):
         User.__init__(self, user_id, name, age)
         self.subscription_start = subscription_start
+        self.name = "PremiumUser"
 
 class FamilyAccountUser(User):
     def __init__(self, user_id, name, age):
         User.__init__(self, user_id, name, age)
         self.sub_users = []
+        self.name = "FamilyAccountUser"
 
     def add_sub_user(self, sub_user):
         self.sub_users.append(sub_user)
@@ -55,3 +58,6 @@ class FamilyMember(User):
     def __init__(self, user_id, name, age, parent):
         User.__init__(self, user_id, name, age)
         self.parent = parent
+        self.name = "FamilyMember"
+
+    
